@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>Attendify — Smart Attendance Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="#" class="brand" onclick="showPage('dashboard');return false">
+        <span class="brand-logo">A</span>
+        <span class="brand-name">Attendify<small>SMART CAMPUS</small></span>
+      </a>
+
+      <div class="side-label">WORKSPACE</div>
+      <nav class="navigation">
+        <button class="nav-link active" data-page="dashboard" onclick="showPage('dashboard')">
+          <span class="nav-icon">⌂</span><span>Dashboard</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-link" data-page="students" onclick="showPage('students')">
+          <span class="nav-icon">♙</span><span>Students</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-link" data-page="attendance" onclick="showPage('attendance')">
+          <span class="nav-icon">✓</span><span>Attendance</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-link" data-page="reports" onclick="showPage('reports')">
+          <span class="nav-icon">▤</span><span>Reports</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-link" data-page="timetable" onclick="showPage('timetable')">
+          <span class="nav-icon">▦</span><span>Timetable</span><span class="nav-arrow">›</span>
+        </button>
+      </nav>
+
+      <div class="side-label secondary-label">PREFERENCES</div>
+      <nav class="navigation">
+        <button class="nav-link" data-page="settings" onclick="showPage('settings')">
+          <span class="nav-icon">⚙</span><span>Settings</span><span class="nav-arrow">›</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-help">
+        <div class="help-symbol">✦</div>
+        <b>Smart Attendance</b>
+        <p>Simple, organized, and efficient classroom management.</p>
+        <button onclick="showPage('attendance')">Get started →</button>
+      </div>
+
+      <div class="sidebar-profile">
+        <div class="profile-avatar">AD</div>
+        <div class="profile-details"><b>Administrator</b><small>Campus Manager</small></div>
+        <span class="online-dot"></span>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" onclick="toggleSidebar()">☰</button>
+          <div>
+            <div class="breadcrumb">Workspace <span>/</span> <b id="crumb">Dashboard</b></div>
+            <h2 id="page-title">Dashboard Overview</h2>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="date-chip"><span>◷</span><span id="today-label"></span></div>
+          <button class="top-avatar" onclick="showPage('settings')" aria-label="Open settings">AD</button>
+        </div>
+      </header>
+
+      <div id="notice" class="notice" hidden></div>
+
+      <!-- SLIDE 1: DASHBOARD -->
+      <section id="dashboard" class="page active-page">
+        <div class="hero-banner">
+          <div class="hero-content">
+            <span class="hero-tag"><span class="pulse-dot"></span> YOUR CAMPUS OVERVIEW</span>
+            <h1>Welcome back, Admin! <span class="wave">✦</span></h1>
+            <p>Everything you need to manage your classroom, all in one place.</p>
+            <div class="hero-actions">
+              <button class="hero-button" onclick="showPage('attendance')">✓ Mark Attendance <span>→</span></button>
+              <button class="hero-link" onclick="showPage('students')">Explore Students ↗</button>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="art-orbit orbit-one"></div>
+            <div class="art-orbit orbit-two"></div>
+            <div class="art-glass">
+              <span class="art-check">✓</span>
+              <div class="art-lines"><i></i><i></i><i></i></div>
+              <div class="art-mini"><span>✓</span> Attendance saved</div>
+            </div>
+            <span class="float-bubble bubble-one">✦</span>
+            <span class="float-bubble bubble-two">✓</span>
+          </div>
+          <div class="hero-decoration"></div>
+        </div>
+
+        <div class="section-title-row">
+          <div><span class="eyebrow">AT A GLANCE</span><h2>Today's Overview</h2></div>
+          <span class="updated-label"><span class="live-dot"></span> Connected dashboard</span>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card card-purple">
+            <div class="stat-heading"><span>Total Students</span><span class="stat-icon">♙</span></div>
+            <div class="stat-value" id="totalStudents">0</div>
+            <div class="stat-foot"><span class="trend-icon">↗</span> Registered students</div>
+            <div class="stat-decoration">♙</div>
+          </article>
+          <article class="stat-card card-green">
+            <div class="stat-heading"><span>Present Today</span><span class="stat-icon">✓</span></div>
+            <div class="stat-value" id="presentCount">0</div>
+            <div class="stat-foot"><span class="trend-icon">↗</span> Marked present</div>
+            <div class="stat-decoration">✓</div>
+          </article>
+          <article class="stat-card card-red">
+            <div class="stat-heading"><span>Absent Today</span><span class="stat-icon">×</span></div>
+            <div class="stat-value" id="absentCount">0</div>
+            <div class="stat-foot">Daily absence count</div>
+            <div class="stat-decoration">×</div>
+          </article>
+          <article class="stat-card card-blue">
+            <div class="stat-heading"><span>Attendance Rate</span><span class="stat-icon">↗</span></div>
+            <div class="stat-value" id="attendanceRate">0%</div>
+            <div class="stat-foot">Present and late / all students</div>
+            <div class="stat-decoration">%</div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="surface attendance-overview">
+            <div class="surface-heading">
+              <div><span class="eyebrow">LIVE STATISTICS</span><h3>Attendance Distribution</h3><p>Today's attendance breakdown</p></div>
+              <button class="round-action" onclick="loadDashboard()" aria-label="Refresh dashboard">↻</button>
+            </div>
+            <div class="chart-layout">
+              <div class="donut" id="donut">
+                <div class="donut-inner"><strong id="donut-rate">0%</strong><span>Attendance</span></div>
+              </div>
+              <div class="chart-legend">
+                <div><i class="legend-dot dot-present"></i><span>Present</span><b id="legend-present">0</b></div>
+                <div><i class="legend-dot dot-absent"></i><span>Absent</span><b id="legend-absent">0</b></div>
+                <div><i class="legend-dot dot-late"></i><span>Late</span><b id="legend-late">0</b></div>
+                <div><i class="legend-dot dot-unmarked"></i><span>Unmarked</span><b id="legend-unmarked">0</b></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="surface quick-panel">
+            <div class="surface-heading"><div><span class="eyebrow">SHORTCUTS</span><h3>Quick Actions</h3><p>Get things done faster</p></div></div>
+            <button class="action-row" onclick="showPage('students')"><span class="action-symbol symbol-purple">＋</span><span class="action-copy"><b>Add a Student</b><small>Register a new student</small></span><span class="action-arrow">→</span></button>
+            <button class="action-row" onclick="showPage('attendance')"><span class="action-symbol symbol-green">✓</span><span class="action-copy"><b>Take Attendance</b><small>Record daily attendance</small></span><span class="action-arrow">→</span></button>
+            <button class="action-row" onclick="showPage('reports')"><span class="action-symbol symbol-blue">▤</span><span class="action-copy"><b>View Reports</b><small>Track attendance history</small></span><span class="action-arrow">→</span></button>
+          </article>
+        </div>
+
+        <article class="surface recent-panel">
+          <div class="surface-heading">
+            <div><span class="eyebrow">STUDENT DIRECTORY</span><h3>Recently Added Students</h3><p>Your latest registered students</p></div>
+            <button class="outline-button" onclick="showPage('students')">View All Students →</button>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>ROLL NUMBER</th><th>COURSE</th><th>SEMESTER</th></tr></thead><tbody id="recent-students"></tbody></table></div>
+        </article>
+      </section>
+
+      <!-- SLIDE 2: STUDENTS -->
+      <section id="students" class="page" hidden>
+        <div class="page-banner banner-purple">
+          <div><span class="eyebrow">CAMPUS DIRECTORY</span><h1>Student Directory</h1><p>All your student information, organized in one place.</p></div>
+          <div class="banner-illustration">♙</div>
+        </div>
+        <div class="section-title-row">
+          <div><span class="eyebrow">MANAGEMENT</span><h2>Manage Students</h2></div>
+          <button class="primary-button" onclick="toggleForm()">＋ Add Student</button>
+        </div>
+        <form id="student-form" class="surface form-grid" hidden>
+          <div class="form-header full"><div><h3>Register a Student</h3><p>Enter the student details below.</p></div><button type="button" class="close-button" onclick="toggleForm(false)">×</button></div>
+          <label>Full Name<input name="name" required maxlength="100" placeholder="Enter full name"></label>
+          <label>Roll Number<input name="roll_no" required maxlength="30" placeholder="e.g. 2401530100"></label>
+          <label>Course / Branch<input name="course" required placeholder="e.g. B.Tech CSE"></label>
+          <label>Semester / Year<input name="semester" required placeholder="e.g. 5th Semester"></label>
+          <label class="full">Email Address<input name="email" type="email" placeholder="student@example.com"></label>
+          <div class="form-actions full"><button type="button" class="outline-button" onclick="toggleForm(false)">Cancel</button><button class="primary-button">Save Student →</button></div>
+        </form>
+        <article class="surface">
+          <div class="toolbar"><div class="search-box"><span>⌕</span><input id="student-search" placeholder="Search by name, roll number, or course..."></div><span class="count-chip" id="student-count">0 students</span></div>
+          <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>ROLL NUMBER</th><th>COURSE</th><th>SEMESTER</th><th>EMAIL</th><th>ACTION</th></tr></thead><tbody id="students-body"></tbody></table></div>
+        </article>
+      </section>
+
+      <!-- SLIDE 3: ATTENDANCE -->
+      <section id="attendance" class="page" hidden>
+        <div class="page-banner banner-green">
+          <div><span class="eyebrow">DAILY CLASSROOM RECORD</span><h1>Attendance Center</h1><p>Record, update, and review daily student attendance.</p></div>
+          <div class="banner-illustration">✓</div>
+        </div>
+        <div class="section-title-row"><div><span class="eyebrow">DAILY RECORDS</span><h2>Mark Attendance</h2></div><span class="count-chip" id="marked-count">0 marked</span></div>
+        <article class="surface">
+          <div class="toolbar attendance-toolbar"><label class="date-field">Select Date<input type="date" id="attendance-date"></label><button class="outline-button" onclick="loadAttendance()">↻ Refresh Records</button></div>
+          <div class="attendance-tip"><span>✦</span><div><b>Quick tip</b><p>Select a status beside each student. Your changes are saved to the database automatically.</p></div></div>
+          <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>ROLL NUMBER</th><th>COURSE</th><th>ATTENDANCE STATUS</th></tr></thead><tbody id="attendance-body"></tbody></table></div>
+          <div class="bottom-note">Changes are saved automatically when you choose a status.</div>
+        </article>
+      </section>
+
+      <!-- SLIDE 4: REPORTS -->
+      <section id="reports" class="page" hidden>
+        <div class="page-banner banner-blue">
+          <div><span class="eyebrow">INSIGHTS & ANALYTICS</span><h1>Attendance Reports</h1><p>Understand attendance patterns with individual student reports.</p></div>
+          <div class="banner-illustration">▤</div>
+        </div>
+        <div class="section-title-row"><div><span class="eyebrow">PERFORMANCE</span><h2>Generate a Report</h2></div></div>
+        <article class="surface">
+          <div class="toolbar report-toolbar"><label class="report-select">Choose a Student<select id="report-student"><option value="">Select a student</option></select></label><button class="primary-button" onclick="loadReport()">Generate Report →</button></div>
+          <div id="report-result"><div class="empty-state"><span class="empty-icon">▤</span><h3>Your report starts here</h3><p>Select a student above to view their attendance history and percentage.</p></div></div>
+        </article>
+      </section>
+
+      <!-- SLIDE 5: TIMETABLE -->
+      <section id="timetable" class="page" hidden>
+        <div class="page-banner banner-orange">
+          <div><span class="eyebrow">CLASSROOM PLANNER</span><h1>Class Timetable</h1><p>A simple weekly overview of your class schedule.</p></div>
+          <div class="banner-illustration">▦</div>
+        </div>
+        <div class="section-title-row"><div><span class="eyebrow">WEEKLY PLANNER</span><h2>Sample Class Schedule</h2></div><span class="count-chip">Demo timetable</span></div>
+        <article class="surface">
+          <div class="timetable-note">This is a sample timetable. Edit the HTML to match your college's actual class schedule.</div>
+          <div class="table-wrap">
+            <table class="timetable">
+              <thead><tr><th>TIME</th><th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th><th>THURSDAY</th><th>FRIDAY</th></tr></thead>
+              <tbody>
+                <tr><td>09:00–10:00</td><td><span class="class-pill pill-purple">DBMS</span></td><td><span class="class-pill pill-blue">OS</span></td><td><span class="class-pill pill-green">Java</span></td><td><span class="class-pill pill-orange">DAA</span></td><td><span class="class-pill pill-purple">DBMS</span></td></tr>
+                <tr><td>10:00–11:00</td><td><span class="class-pill pill-blue">OS</span></td><td><span class="class-pill pill-green">Java</span></td><td><span class="class-pill pill-orange">DAA</span></td><td><span class="class-pill pill-purple">DBMS</span></td><td><span class="class-pill pill-blue">OS</span></td></tr>
+                <tr><td>11:00–12:00</td><td><span class="class-pill pill-green">Java Lab</span></td><td><span class="class-pill pill-purple">Web Tech</span></td><td><span class="class-pill pill-blue">OS</span></td><td><span class="class-pill pill-green">Java</span></td><td><span class="class-pill pill-orange">DAA</span></td></tr>
+                <tr><td>12:00–01:00</td><td colspan="5" class="break-cell">Lunch Break · 12:00 PM – 1:00 PM</td></tr>
+                <tr><td>01:00–02:00</td><td><span class="class-pill pill-orange">DAA</span></td><td><span class="class-pill pill-blue">OS Lab</span></td><td><span class="class-pill pill-purple">Web Tech</span></td><td><span class="class-pill pill-green">Java Lab</span></td><td><span class="class-pill pill-blue">OS Lab</span></td></tr>
+                <tr><td>02:00–03:00</td><td><span class="class-pill pill-purple">Web Tech</span></td><td><span class="class-pill pill-orange">DAA</span></td><td><span class="class-pill pill-green">Java</span></td><td><span class="class-pill pill-blue">OS</span></td><td><span class="class-pill pill-purple">Web Tech</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- SLIDE 6: SETTINGS -->
+      <section id="settings" class="page" hidden>
+        <div class="page-banner banner-dark">
+          <div><span class="eyebrow">PERSONALIZE YOUR WORKSPACE</span><h1>Settings</h1><p>Manage your preferences and application information.</p></div>
+          <div class="banner-illustration">⚙</div>
+        </div>
+        <div class="settings-grid">
+          <article class="surface settings-card">
+            <span class="settings-icon">♙</span><h3>Administrator Profile</h3><p>Basic information for the current dashboard user.</p>
+            <label>Display Name<input id="setting-name" value="Administrator" maxlength="60"></label>
+            <label>Role<input value="Campus Manager" disabled></label>
+            <button class="primary-button" onclick="saveSettings()">Save Preferences →</button>
+          </article>
+          <article class="surface settings-card">
+            <span class="settings-icon">◈</span><h3>Application Information</h3><p>About this student attendance management project.</p>
+            <div class="setting-line"><span>Application</span><b>Attendify</b></div>
+            <div class="setting-line"><span>Frontend</span><b>HTML · CSS · JavaScript</b></div>
+            <div class="setting-line"><span>Backend</span><b>Node.js · Express</b></div>
+            <div class="setting-line"><span>Database</span><b>MySQL</b></div>
+          </article>
+        </div>
+        <article class="surface settings-info"><span class="settings-icon">✦</span><div><h3>Designed for a smarter campus</h3><p>Use the sidebar to navigate between dashboard, students, attendance, reports, and timetable.</p></div></article>
+      </section>
+
+      <footer class="footer"><span>© 2026 Attendify</span><span>Made for smarter campus management <b>✦</b></span></footer>
+    </main>
+  </div>
+</body>
+</html>
